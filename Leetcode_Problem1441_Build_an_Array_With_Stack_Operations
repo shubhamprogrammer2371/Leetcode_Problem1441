@@ -1,0 +1,115 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char** buildArray(int* target, int targetSize, int n, int* returnSize) {
+    int* stack = malloc(targetSize*sizeof(int));
+    char** ans = (char**)malloc(sizeof(char*)*(2*n));
+    for (int i = 0; i < 2*n; i++) 
+        ans[i]=(char*)malloc(5*sizeof(char));
+    *returnSize = 0;
+    int number = 1 , stack_size = 0 , target_size = 0;
+    while(target_size < targetSize)
+    {
+        stack[stack_size] = number++;
+        strcpy(ans[(*returnSize)++],"Push");
+        if(stack[stack_size] == target[target_size])
+        {
+            stack_size++;
+            target_size++;
+        }
+        else
+            strcpy(ans[(*returnSize)++],"Pop");
+    }
+    free(stack);
+    return ans;
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char ** buildArray(int* target, int targetSize, int n, int* returnSize) {
+    char** ans = (char**)malloc(sizeof(char*) *(2*n));
+    int input = 1;
+    *returnSize = 0;
+    for (int i = 0; i < 2*n; i++) 
+        ans[i]=(char*)malloc(5*sizeof(char));
+    for (int i = 0; i < targetSize; i++) 
+    {
+        while (target[i] > input) 
+        {
+            strcpy(ans[(*returnSize)++], "Push");
+            strcpy(ans[(*returnSize)++], "Pop");
+            input++;
+        }
+        strcpy(ans[(*returnSize)++], "Push");
+        input++;
+    }
+    return ans;
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#define IN "Push"
+#define OUT "Pop"
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+/* Write Push or Pop into result */
+char *in_or_out(char *opt) {
+    int size = 4 + opt == IN; // Push\0  - 5 , Pop\0   - 4
+    char *result = (char *)malloc(size * sizeof(char));
+    result = opt;
+    return result;
+}
+char ** buildArray(int* target, int targetSize, int n, int* returnSize){
+    char **result = (char **)malloc(200 * sizeof(char *));
+    int result_idx = 0 , stream = 1;
+    *returnSize = 0;
+    for (int i = 0; i < targetSize; ++i) 
+    {
+        int diff = target[i] - stream;
+        if (diff > 0) /* The missed ones will add IN&OUT into result */
+        {
+            for (int t = 0; t < diff; ++t) 
+            {
+                result[result_idx++] = in_or_out(IN);
+                result[result_idx++] = in_or_out(OUT);
+                *returnSize += 2;
+            }
+        }
+        result[result_idx++] = in_or_out(IN);
+        ++(*returnSize);
+        stream = target[i] + 1; /* Update stream */
+    }
+    return result;
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char ** buildArray(int* target, int targetSize, int n, int* returnSize){
+    *returnSize = 0;
+    char **arr = (char**) calloc(n*2, sizeof(char*));
+    for (int i = 0; i < n*2; i++)
+        arr[i] = (char*) calloc(5, sizeof(char));
+    for(int i = 1 , j = 0 ; i <= n && j < targetSize ; ++i)
+    {
+        arr[(*returnSize)++] = "Push";
+        if(i == target[j])
+            j++;
+        else 
+            arr[(*returnSize)++] = "Pop";
+    }
+    return arr;
+}
